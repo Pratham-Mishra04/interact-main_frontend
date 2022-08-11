@@ -3,18 +3,15 @@ import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import signupHandler from '../handlers/signupHandler.js';
+import Toaster from '../utils/toaster.js';
 
 const Signup = () => {
 
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
-    const [age, setAge] = useState(12);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [uniName, setUniName] = useState("");
-    const [gradYear, setGradYear] = useState(2025);
-    const [phoneNo, setPhoneNo] = useState("")
 
     const submitHandler = async () =>{
         const formData={
@@ -28,7 +25,18 @@ const Signup = () => {
             "password":password,
             "confirmPassword":confirmPassword
         };
-        signupHandler(formData);
+        if(checker()) signupHandler(formData);
+    }
+
+    const checker = () =>{
+        if(name=="") Toaster.error("Enter the Name");
+        else if(username=="") Toaster.error("Enter the Username");
+        else if(email=="") Toaster.error("Enter the Email");
+        else if(password=="") Toaster.error("Enter the Password");
+        else if(confirmPassword=="") Toaster.error("Confirm the Password");
+        else if(password.length<8) Toaster.error("Password must be atleast 8 characters long");
+        else if(password!=confirmPassword) Toaster.error("Passwords do not match");
+        else return true
     }
 
 return (
@@ -44,7 +52,8 @@ return (
                         name="fullname"
                         placeholder="Full Name"
                         value={name}
-                        onChange={(el)=>{setName(el.target.value)}} />
+                        onChange={(el)=>{setName(el.target.value)}}
+                        />
 
                         <input 
                         type="text"
@@ -61,39 +70,6 @@ return (
                         placeholder="Email"
                         value={email}
                         onChange={(el)=>{setEmail(el.target.value)}} />
-
-                        <input 
-                        type="text"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="University Name"
-                        placeholder="University Name"
-                        value={uniName}
-                        onChange={(el)=>{setUniName(el.target.value)}} />
-
-                        <input 
-                        type="number"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="age"
-                        placeholder="Age"
-                        value={age}
-                        onChange={(el)=>{setAge(el.target.value)}} />
-
-                        <input 
-                        type="number"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="gradYear"
-                        placeholder="Graduation Year"
-                        value={gradYear}
-                        onChange={(el)=>{setGradYear(el.target.value)}} />
-
-                        <input 
-                        type="text"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="Phone Number"
-                        placeholder="Phone Number"
-                        value={phoneNo}
-                        onChange={(el)=>{setPhoneNo(el.target.value)}} />
-
 
                     <input 
                         type="password"
@@ -115,7 +91,7 @@ return (
                         type="submit"
                         className="w-full text-center py-3 rounded bg-black text-white hover:bg-green-dark focus:outline-none my-1"
                         onClick={submitHandler}
-                    >Create Account</button>
+                        >Create Account</button>
 
                     <div className="text-center text-sm text-grey-dark mt-4">
                         By signing up, you agree to the 
